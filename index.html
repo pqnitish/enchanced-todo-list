@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+    <style>
+        .todo-list {
+            width: 300px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        li.completed span {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        li button {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            padding: 2px 8px;
+        }
+
+        li button:hover {
+            background-color: #c82333;
+        }
+
+        li span {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+<script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    // Your  code will go here
+    const { useState } = React;
+    const ToDoList = () => {
+        const [todos, setTodos] = useState([]);
+        const [newTodo, setNewTodo] = useState('');
+
+        const handleAddTodo = (e) => {
+            e.preventDefault();
+            if (newTodo.trim() !== '') {
+                setTodos([...todos, { text: newTodo, completed: false }]);
+                setNewTodo('');
+            }
+        };
+
+        const handleDeleteTodo = (index) => {
+            const updatedTodos = todos.filter((todo, i) => i !== index);
+            setTodos(updatedTodos);
+        };
+
+        const handleToggleComplete = (index) => {
+            const updatedTodos = todos.map((todo, i) =>
+                i === index ? { ...todo, completed: !todo.completed } : todo
+            );
+            setTodos(updatedTodos);
+        };
+
+        return (
+            <div className="todo-list">
+                <h1>ToDo List</h1>
+                <form onSubmit={handleAddTodo}>
+                    <input
+                        type="text"
+                        value={newTodo}
+                        onChange={(e) => setNewTodo(e.target.value)}
+                        placeholder="Add a new todo"
+                    />
+                    <button type="submit">Add</button>
+                </form>
+                <ul>
+                    {todos.map((todo, index) => (
+                        <li key={index} className={todo.completed ? 'completed' : ''}>
+                            <input
+                                type="checkbox"
+                                checked={todo.completed}
+                                onChange={() => handleToggleComplete(index)}
+                            />
+                            <span>{todo.text}</span>
+                            <button onClick={() => handleDeleteTodo(index)}>Delete</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+    };
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<ToDoList />)
+
+</script>
+
+</html>
